@@ -45,9 +45,16 @@ class Canvas extends Panel {
     g.clearRect(0, 0, size.width, size.height)
     
     var toBeDrawn = {
-      World.content.filter(_.toVector.forall((v: Vector4d) => v.z > Camera.near && v.z < Camera.far))
-      .sorted(RectZOrdering).reverse
+      World.content.filter(_.toVector.forall((v: Vector4d) =>v.z < Camera.far))
+      .filter(_.toVector.exists(_.z > Camera.near))
+      .map{w: Wall =>
+        if (w.toVector.exists(_.z <= Camera.near))w.projectToZ0
+        else w
+      }
+      .map((r: Wall) =>(r, r.toVector.map(_.z).max))
+      .sorted(WallZOrdering).reverse
     }
+    
     
     def transformToImgPlane(v: Vector4d) = {
     val x1 = (v.x * width ) / (2.0 * v.w) + width / 2
@@ -55,34 +62,36 @@ class Canvas extends Panel {
     Vector4d(x1,y1,v.z,v.w)
     }
     
-    
-    val polygons = toBeDrawn.map(_.multBy(Camera.perspectiveTransformer)
-        .normalize).map((r: Rect) => Rect( r.toVector.map(transformToImgPlane(_)))).map{
-      ((a: Rect) => new Polygon(a.xIntArray, a.yIntArray, 4))    
-      }
+    val polygons: Array[(Polygon, Double)] = toBeDrawn.map( (a: (Wall, Double)) => 
+        Wall(a._1.multBy(Camera.perspectiveTransformer)
+        .normalizeHgen.toVector.map(transformToImgPlane(_)) )).map{
+      (r: (Wall)) => new Polygon(r.xIntArray, r.yIntArray, 4)
+      } zip toBeDrawn.map(_._2)
     
 //    if (!toBeDrawn.isEmpty)println(toBeDrawn.map(_.multBy(Matrix4d.perspectiveTransformer).normalize).map(
 //        _.toString).reduceLeft(_ + "\n" + _) + "\n")
     
-//    g.translate(width / 2, height / 2)
+
+    
+    
     
     g.setStroke(new BasicStroke(5f))
-    polygons.foreach{p: Polygon =>
+    polygons.foreach{p: (Polygon, Double) =>
       g.setColor(Color.black)
-      g.drawPolygon(p)
-      g.setColor(Color.gray)
-      g.fillPolygon(p)
+      g.drawPolygon(p._1)
+      val c = Color.gray
+      g.setColor{
+        def getC(d: Int) =  {
+          val a = 10000/(7500+ p._2)
+          max(20,min((a * d).toInt,255))
+        }
+        new Color(getC(c.getRed), getC(c.getGreen), getC(c.getBlue))
+        }
+      g.fillPolygon(p._1)
     }
     
     
   }
   
- 
-  
-//    case MouseClicked(_,_,_,_,_) => {
-//      ModelHandler.changeRotationXZ(Pi/100)
-//          println("left")
-//          update(ModelHandler.rotationXZ)
-//    }
   
 }

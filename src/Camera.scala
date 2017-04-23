@@ -21,7 +21,13 @@ object Camera {
   val perspectiveTransformer = Matrix4d(t1,t2,t3,t4)
   
   def move(d: Set[Direction]) = {
-    coords = coords.add(d.map(_.vector).toVector.reduceLeft(_.add(_)).mult(-moveSpeed))
+    val collisionDistance = 100
+//    val newCoords = coords.add(d.map(_.vector).toVector.reduceLeft(_.add(_)).mult(-moveSpeed))
+    val coordDelta = d.map(_.vector).toVector.reduceLeft(_.add(_)).mult(-moveSpeed)
+//    World.content.foreach((r: Rect) =>println(r.distanceTo(coordDelta)))
+    if (World.content.forall(_.distanceTo(coordDelta) > collisionDistance)) {
+    coords = coords.add(coordDelta)
+    }
     coords
   }
   // in rads

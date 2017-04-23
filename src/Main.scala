@@ -69,15 +69,7 @@ object ModelHandler {
 //    println(updateMatrix.columns.map(_.toString).reduceLeft(_ + "\n" +_) + "\n")
   }
   
-//  def changeRotationXZ(i: Double) = {
-//    rotationXZ = i
-//    World.needsUpdating = true
-//  }
-//  
-//  def updateMatrix = {
-//    Matrix4d.getRotateXZ(rotationXZ)
-//  }
-  
+
   
   
   
