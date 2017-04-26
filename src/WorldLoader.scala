@@ -3,7 +3,8 @@ import scala.io.Source
 object WorldLoader {
   
   /*
-   * Tries to load a world from file and returns it wrapped in an option. Returns None if there is an exception
+   * Tries to load a world from file and returns it wrapped in an option. Returns None if there is any exception
+   * when loading the world.
    */
   
   def load(file: String): Option[Array[Wall]] = {

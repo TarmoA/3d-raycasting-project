@@ -12,8 +12,8 @@ object Camera {
   private var coords = Vector4d(0,0,0,0)
   def location = coords
   
-  private val moveSpeed = 5
-  private val rotSpeed = scala.math.Pi/180
+  private val moveSpeed = 5                // in world-units per update
+  private val rotSpeed = scala.math.Pi/180 // in radians per update
   
   /*
    * These can be tweaked to achieve viewing angles other than 90 degrees
@@ -26,10 +26,10 @@ object Camera {
   /*
    * This is the matrix to apply a perspective transform on a point
    */
-  private val t1 = Vector4d(fov,  0,  0,  0)
-  private val t2 = Vector4d(0  ,fov,  0,  0)
-  private val t3 = Vector4d(0  ,  0  ,(far+near)/(far-near),1)
-  private val t4 = Vector4d(0  ,  0  ,(2*near*far)/(near-far)  ,0)
+  private val t1 = Vector4d(fov,  0,            0           , 0)
+  private val t2 = Vector4d(0  ,fov,            0           , 0)
+  private val t3 = Vector4d(0  ,  0,(far+near)/(far-near)   , 1)
+  private val t4 = Vector4d(0  ,  0,(2*near*far)/(near-far) , 0)
   val perspectiveTransformer = Matrix4d(t1,t2,t3,t4)
   
   /*
@@ -45,7 +45,7 @@ object Camera {
     coords
   }
   
-  private var rotation: Double = 0  // in rads
+  private var rotation: Double = 0  // in radians
   def getRotation = rotation
   
   

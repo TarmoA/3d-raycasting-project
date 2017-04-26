@@ -3,6 +3,10 @@ import scala.swing._
 import scala.swing.event._
 import scala.math._
 
+/*
+ * This is the class used to draw a world on the screen. Extending scala.swing.Panel allows for easy drawin through the
+ * java.awt api.
+ */
 class Canvas(val width: Int, val height: Int) extends Panel {
   
 
@@ -11,7 +15,8 @@ class Canvas(val width: Int, val height: Int) extends Panel {
   listenTo(keys)
   
   /*
-   * 
+   * The panel extends scala.swing.Reactor which provides an easy way to listen to keypresses. 
+   * This sets it to listen to keypresses and calls appropriate methods in ModelHandler
    */
   reactions += {
     case KeyPressed(_,key,_,_) => {

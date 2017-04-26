@@ -10,15 +10,7 @@ class Vector4d(val x: Double, val y: Double, val z: Double, val w: Double) {
    */
   def size = 4
   
-  def apply(i: Int) = {
-    i match {
-      case 0 => x
-      case 1 => y
-      case 2 => z
-      case 3 => w
-      case _ => throw new IndexOutOfBoundsException
-    }
-  }
+  def apply(i: Int) = vals(i)
   
   /*
    * Length of the vector in 3d space. Does not take into account the w value.

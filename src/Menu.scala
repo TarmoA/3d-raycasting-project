@@ -2,7 +2,7 @@ import scala.swing._
 import scala.swing.event._
 
 /*
- * This class is used to give the user a text field to define a file from which to load a world
+ * This class is used to give the user a simple menu with a text field to define a file from which to load a world
  */
 class Menu extends BoxPanel(Orientation.Vertical) {
   
@@ -27,8 +27,10 @@ class Menu extends BoxPanel(Orientation.Vertical) {
   	  }
     }
   }
-  
   def load = Main.top.load(field.text)
   
+  /*
+   * This method is called if there is an exception when trying to load from file
+   */
   def onError = errorLabel.text = "error trying to load"
 }

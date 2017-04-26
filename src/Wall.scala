@@ -37,7 +37,7 @@ class Wall(v1: Vector4d, v2: Vector4d, v3: Vector4d, v4: Vector4d) {
     d
   }
   /*
-   * This method cuts the Wall so that any part of it that has a z-coordinate smaller than 1 is vut off and the new end
+   * This method cuts the Wall so that any part of it that has a z-coordinate smaller than 1 is cut off and the new end
    * of the wall is set to z = 1.
    * This is used to correctly render Walls that would otherwise be partially behind the camera
    */

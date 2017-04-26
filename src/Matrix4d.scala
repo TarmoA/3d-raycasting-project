@@ -1,12 +1,15 @@
 import scala.math._
 
 /*
- * A 4-by-4 that is composed os 4 Vector4d-objects. The vectors are its column-vectors.
+ * A 4-by-4 matrix that is composed of 4 Vector4d-objects. The vectors are its column-vectors.
  */
 class Matrix4d(v1: Vector4d, v2: Vector4d, v3: Vector4d, v4: Vector4d){
-  //v1-4 columns
+  
   val columns = Vector(v1,v2,v3,v4)
   
+  /*
+   * Matrix-vector multiplication
+   */
   def mult(v: Vector4d): Vector4d = {
     val newVector = Array[Double](0,0,0,0)
     for (i <- 0 until v1.size){
@@ -19,6 +22,9 @@ class Matrix4d(v1: Vector4d, v2: Vector4d, v3: Vector4d, v4: Vector4d){
     Vector4d(newVector(0),newVector(1),newVector(2),newVector(3))
   }
   
+  /*
+   * Matrix-matrix multiplication
+   */
   def mult(m: Matrix4d): Matrix4d = {
     val res = m.columns.map(mult(_))
     Matrix4d(res(0), res(1), res(2), res(3))
@@ -27,7 +33,7 @@ class Matrix4d(v1: Vector4d, v2: Vector4d, v3: Vector4d, v4: Vector4d){
 }
 
 object Matrix4d {
-  // The Vector4ds are column vectors so they look liek they are the wrong way below
+  // The Vector4ds are column vectors so they look like they are the wrong way on the below matrices
  
    def apply(v1: Vector4d, v2: Vector4d, v3: Vector4d, v4: Vector4d) = {
     new Matrix4d(v1,v2,v3,v4)
