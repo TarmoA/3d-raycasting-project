@@ -1,5 +1,8 @@
 import scala.math._
 
+/*
+ * A 4-by-4 that is composed os 4 Vector4d-objects. The vectors are its column-vectors.
+ */
 class Matrix4d(v1: Vector4d, v2: Vector4d, v3: Vector4d, v4: Vector4d){
   //v1-4 columns
   val columns = Vector(v1,v2,v3,v4)
@@ -13,8 +16,6 @@ class Matrix4d(v1: Vector4d, v2: Vector4d, v3: Vector4d, v4: Vector4d){
       }
       newVector(i) = vconstr
     }
-//    println("1: "+v.x+","+v.y+","+v.z)
-//    println("2: "+newVector(0)+","+newVector(1)+","+newVector(2))
     Vector4d(newVector(0),newVector(1),newVector(2),newVector(3))
   }
   
@@ -26,18 +27,15 @@ class Matrix4d(v1: Vector4d, v2: Vector4d, v3: Vector4d, v4: Vector4d){
 }
 
 object Matrix4d {
-//  def apply(v1: Vector[Double], v2: Vector[Double], v3: Vector[Double], v4: Vector[Double]) = {
-//    new Matrix4d(v1,v2,v3,v4)
-//  }
-  
-  // HUOM Vector4d:t ovat sarakevektoreita joten matriisit näkyvät tässä muodossa kirjoitettuna "väärin päin"
-  
-  
-  
+  // The Vector4ds are column vectors so they look liek they are the wrong way below
+ 
    def apply(v1: Vector4d, v2: Vector4d, v3: Vector4d, v4: Vector4d) = {
-    new Matrix4d(v1,v2,v3,v4)//(v1.toVector,v2.toVector,v3.toVector,v4.toVector)
+    new Matrix4d(v1,v2,v3,v4)
   }
   
+   /*
+    * Matrix used to translate a vector
+    */
   def getTranslate(v: Vector4d) = {
     val v1 = Vector4d(    1.0,      0,  0,  0)
     val v2 = Vector4d(      0,    1.0,  0,  0)
@@ -47,30 +45,30 @@ object Matrix4d {
     new Matrix4d(v1,v2,v3,v4)
   }
   
-  def getRotateXY(a: Double) {
+  /*
+   * Matrices that rotate a point around an axis(x, y or z) by an amount given in radians
+   */
+  def getRotateZ(a: Double) {
     val v1 = Vector4d( cos(a), sin(a),  0,  0)
     val v2 = Vector4d(-sin(a), cos(a),  0,  0)
     val v3 = Vector4d(      0,      0,1.0,  0)
     val v4 = Vector4d(      0,      0,  0,1.0)
-    
     new Matrix4d(v1,v2,v3,v4)
   }
   
-  def getRotateYZ(a: Double) = {
+  def getRotateX(a: Double) = {
     val v1 = Vector4d(1.0,      0,      0,  0)
     val v2 = Vector4d(  0, cos(a), sin(a),  0)
     val v3 = Vector4d(  0,-sin(a), cos(a),  0)
     val v4 = Vector4d(  0,      0,      0,1.0)
-    
     new Matrix4d(v1,v2,v3,v4)
   }
   
-  def getRotateXZ(a: Double) = {
+  def getRotateY(a: Double) = {
     val v1 = Vector4d( cos(a),  0, sin(a),  0)
     val v2 = Vector4d(      0,1.0,      0,  0)
     val v3 = Vector4d(-sin(a),  0, cos(a),  0)
     val v4 = Vector4d(      0,  0,      0,1.0)
-    
     new Matrix4d(v1,v2,v3,v4)
   }
   

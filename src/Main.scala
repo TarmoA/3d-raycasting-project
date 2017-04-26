@@ -6,71 +6,43 @@ import scala.math._
 
 object Main extends SimpleSwingApplication {
   
-  val canvas = new Canvas
+  val canvas = new Canvas(720, 720)
   
+  val menu = new Menu
     
-  def top = new MainFrame {
-    title = "asd"
-    contents = canvas
-  }
-  
-  val logicUpdater = new java.awt.event.ActionListener{
-    def actionPerformed(e: java.awt.event.ActionEvent) = {
-    ModelHandler.update
-    canvas.update
+  val top = new MainFrame {
+    contents = menu
+    
+    /*
+     * This updates the state of the world and redraws on the canvas every time the timer ticks
+     */
+    val logicUpdater = new java.awt.event.ActionListener{
+      def actionPerformed(e: java.awt.event.ActionEvent) = {
+        ModelHandler.update
+        canvas.update
+      }
     }
-   
+    
+    val timer = new javax.swing.Timer(6,logicUpdater)
+    
+    /*
+     * This tries to load a world from a given file path. If succesful, initializes the world , puts the Canvas
+     * on the screen and starts the timer.
+     * If it fails, lets the Menu know of an error
+     */
+    def load(path: String) = {
+      val worldContent = WorldLoader.load(path)
+      if (worldContent.isDefined) {
+    	  timer.start
+    	  World.init(worldContent.get)
+        contents = canvas
+        canvas.requestFocus
+      } else {
+        menu.onError
+      }
+    }
     
   }
-  
-  val timer = new javax.swing.Timer(6,logicUpdater)
-  timer.start
   
 }
 
-object ModelHandler {
-  
-  private var turning: Option[Direction] = None
-  private var moving = Set[Direction]()
-  
-  def startMoving (d: Direction) = moving = moving.+(d)
-  def stopMoving(d: Direction) = moving = moving.-(d)
-  def startTurning (d: Direction) = turning =  Some(d) 
-  def stopTurning = turning = None
-  
-  
-  var rotationXZ: Double = 0
-  
-  var oldPos = Camera.location
-  var oldRot = Camera.getRotation
-  def update = {
-    var matrices = Array[Matrix4d]()
-    
-    if (!moving.isEmpty) {
-      val newPos = Camera.move(moving)
-      val posDelta = Camera.location.sub(oldPos)
-      matrices = matrices.+:(Matrix4d.getTranslate(posDelta))
-      oldPos = newPos
-    }
-    
-    if (turning.isDefined) {
-      val newRot = Camera.rotate(turning.get)
-      val rotDelta = Camera.getRotation - oldRot
-      matrices = matrices.+:(Matrix4d.getRotateXZ(rotDelta))
-      oldRot = newRot
-    }
-    
-    
-    if (!matrices.isEmpty) {
-      val updateMatrix = matrices.reduceLeft(_.mult(_))
-      World.update(updateMatrix)
-    }
-    
-//    println(updateMatrix.columns.map(_.toString).reduceLeft(_ + "\n" +_) + "\n")
-  }
-  
-
-  
-  
-  
-}
